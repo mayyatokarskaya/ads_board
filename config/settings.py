@@ -1,12 +1,18 @@
 import os
 from datetime import timedelta
+from pathlib import Path
 
 from dotenv import load_dotenv
 
-from pathlib import Path
-
 load_dotenv(override=True)
-print("DB config:", os.getenv("NAME"), os.getenv("USER"), os.getenv("PASSWORD"), os.getenv("HOST"), os.getenv("PORT"))
+print(
+    "DB config:",
+    os.getenv("NAME"),
+    os.getenv("USER"),
+    os.getenv("PASSWORD"),
+    os.getenv("HOST"),
+    os.getenv("PORT"),
+)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,11 +31,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'rest_framework',
-    'rest_framework.authtoken',
-    'drf_yasg',
-    'ads',
-    'users',
+    "rest_framework",
+    "rest_framework.authtoken",
+    "drf_yasg",
+    "ads",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -67,11 +73,11 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        'NAME': 'ads_board',
-        'USER': 'ads_board_user',
-        'PASSWORD': 'ads_board_password',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        "NAME": "ads_board",
+        "USER": "ads_board_user",
+        "PASSWORD": "ads_board_password",
+        "HOST": "localhost",
+        "PORT": "5432",
     }
 }
 
@@ -112,16 +118,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = "users.User"
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'AUTH_HEADER_TYPES': ('Bearer',),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "AUTH_HEADER_TYPES": ("Bearer",),
 }
