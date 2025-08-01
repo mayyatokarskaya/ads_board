@@ -15,6 +15,7 @@ class AdSerializer(serializers.ModelSerializer):
             "price",
             "author",
             "author_email",
+            "image",
             "created_at",
         )
         read_only_fields = ("id", "author_email", "created_at", "author")
