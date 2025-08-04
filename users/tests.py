@@ -18,7 +18,9 @@ def test_create_user():
 
 @pytest.mark.django_db
 def test_create_superuser():
-    admin = User.objects.create_superuser(email="admin@example.com", password="adminpass")
+    admin = User.objects.create_superuser(
+        email="admin@example.com", password="adminpass"
+    )
     assert admin.is_staff
     assert admin.is_superuser
     assert admin.email == "admin@example.com"
@@ -33,7 +35,9 @@ def test_user_str_method():
 
 @pytest.mark.django_db
 def test_user_serializer():
-    user = User.objects.create_user(email="serialize@example.com", full_name="Test User", password="pass")
+    user = User.objects.create_user(
+        email="serialize@example.com", full_name="Test User", password="pass"
+    )
     serializer = UserSerializer(user)
     data = serializer.data
     assert data["email"] == "serialize@example.com"
@@ -48,7 +52,9 @@ def test_jwt_authentication():
     user = User.objects.create_user(email="jwtuser@example.com", password="jwtpass123")
 
     url = reverse("token_obtain_pair")
-    response = client.post(url, {"email": "jwtuser@example.com", "password": "jwtpass123"}, format="json")
+    response = client.post(
+        url, {"email": "jwtuser@example.com", "password": "jwtpass123"}, format="json"
+    )
 
     assert response.status_code == 200
     assert "access" in response.data

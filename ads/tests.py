@@ -10,7 +10,9 @@ pytestmark = pytest.mark.django_db
 
 @pytest.fixture
 def user():
-    return User.objects.create_user(email="testuser@example.com", password="testpass123")
+    return User.objects.create_user(
+        email="testuser@example.com", password="testpass123"
+    )
 
 
 @pytest.fixture
@@ -21,10 +23,7 @@ def another_user():
 @pytest.fixture
 def ad(user):
     return Ad.objects.create(
-        title="Test Ad",
-        description="Test description",
-        price=100.00,
-        author=user
+        title="Test Ad", description="Test description", price=100.00, author=user
     )
 
 

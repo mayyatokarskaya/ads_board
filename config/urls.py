@@ -2,13 +2,18 @@ from django.contrib import admin
 from django.conf import settings
 from django.urls import include, path
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularSwaggerView,
     SpectacularRedocView,
 )
 
+from ads.views import AdListView
+
 urlpatterns = [
+    path("", AdListView.as_view(), name="home"),
+    path("api/users/", include("users.urls")),
     path("admin/", admin.site.urls),
     path("api/token/", include("users.jwt_urls")),
     path("api/ads/", include("ads.urls")),
