@@ -6,14 +6,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
-print(
-    "DB config:",
-    os.getenv("NAME"),
-    os.getenv("USER"),
-    os.getenv("PASSWORD"),
-    os.getenv("HOST"),
-    os.getenv("PORT"),
-)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -38,9 +30,11 @@ INSTALLED_APPS = [
     "ads",
     "users",
     "drf_spectacular",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -55,7 +49,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, 'templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -75,19 +69,19 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "ads_board",
-        "USER": "ads_board_user",
-        "PASSWORD": "ads_board_password",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "NAME": os.getenv("NAME"),
+        "USER": os.getenv("USER"),
+        "PASSWORD": os.getenv("PASSWORD"),
+        "HOST": os.getenv("HOST"),
+        "PORT": os.getenv("PORT"),
     }
 }
 
-if 'pytest' in sys.modules:
+if "pytest" in sys.modules:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': ':memory:',
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
         }
     }
 
@@ -120,8 +114,8 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = "static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [BASE_DIR / "templates"]
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -143,7 +137,6 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
-
 SPECTACULAR_SETTINGS = {
     "TITLE": "ads_board",
     "DESCRIPTION": "API documentation",
@@ -164,3 +157,5 @@ SPECTACULAR_SETTINGS = {
         },
     },
 }
+
+CORS_ALLOW_ALL_ORIGINS = True

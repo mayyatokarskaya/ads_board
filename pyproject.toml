@@ -21,6 +21,7 @@ pytest = "^8.4.1"
 pytest-django = "^4.11.1"
 coverage = "^7.10.1"
 pytest-cov = "^6.2.1"
+django-cors-headers = "^4.7.0"
 
 
 [tool.poetry.group.lint.dependencies]
