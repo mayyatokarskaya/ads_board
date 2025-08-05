@@ -14,3 +14,13 @@ class Ad(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Comment(models.Model):
+    ad = models.ForeignKey(Ad, related_name="comments", on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Комментарий от {self.author.email} к '{self.ad.title}'"
