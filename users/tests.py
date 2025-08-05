@@ -8,17 +8,19 @@ from django.urls import reverse
 
 User = get_user_model()
 
+
 # фикстуры
 @pytest.fixture
 def user():
     return User.objects.create_user(
-        email="testuser@example.com",
-        password="testpass123"
+        email="testuser@example.com", password="testpass123"
     )
+
 
 @pytest.fixture
 def api_client():
     return APIClient()
+
 
 @pytest.fixture
 def auth_client(user):
@@ -96,7 +98,7 @@ def test_register_api():
         "email": "new@example.com",
         "full_name": "New User",
         "password": "newpass123",
-        "password2": "newpass123"
+        "password2": "newpass123",
     }
     response = client.post(url, data)
     assert response.status_code == status.HTTP_201_CREATED
@@ -115,11 +117,14 @@ def test_password_reset_flow(user, api_client):
     # 2. Подтверждение сброса пароля
     token = response.data["token"]  # Используем реальный токен из ответа
     confirm_url = reverse("api_password_reset_confirm")
-    response = api_client.post(confirm_url, {
-        "token": token,
-        "new_password": "newpassword123",
-        "password2": "newpassword123"
-    })
+    response = api_client.post(
+        confirm_url,
+        {
+            "token": token,
+            "new_password": "newpassword123",
+            "password2": "newpassword123",
+        },
+    )
     assert response.status_code == status.HTTP_200_OK
 
     # 3. Проверяем, что пароль действительно изменился
