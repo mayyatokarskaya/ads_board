@@ -3,6 +3,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 from ads.models import Ad
+from ads.permissions import IsOwnerOrReadOnly, IsAdminOrOwnerOrReadOnly
 from users.models import User
 
 
@@ -36,6 +37,12 @@ def auth_client(user):
     client.force_authenticate(user=user)
     return client
 
+@pytest.fixture
+def admin_user():
+    return User.objects.create_superuser(
+        email="admin@example.com",
+        password="adminpass"
+    )
 
 @pytest.mark.django_db
 def test_list_ads(auth_client, ad):
@@ -96,3 +103,45 @@ def test_ordering(auth_client):
     response = auth_client.get(url)
     assert response.status_code == status.HTTP_200_OK
     assert response.data["results"][0]["id"] == ad2.id
+
+
+# Добавляем в существующий ads/tests.py
+
+@pytest.mark.django_db
+def test_is_owner_or_read_only_permission(api_client, auth_client, user, another_user, ad):
+    permission = IsOwnerOrReadOnly()
+    request = type('Request', (), {'method': 'GET', 'user': None})()  # Анонимный запрос
+
+    # 1. Проверка SAFE_METHODS (GET, HEAD, OPTIONS)
+    assert permission.has_object_permission(request, None, ad)  # Должен разрешить
+
+    # 2. Проверка изменения для автора
+    request.method = 'PUT'
+    request.user = user  # Владелец объявления
+    assert permission.has_object_permission(request, None, ad)
+
+    # 3. Проверка изменения для другого пользователя
+    request.user = another_user  # Не владелец
+    assert not permission.has_object_permission(request, None, ad)
+
+
+@pytest.mark.django_db
+def test_is_admin_or_owner_or_read_only_permission(api_client, auth_client, user, another_user, admin_user, ad):
+    permission = IsAdminOrOwnerOrReadOnly()
+    request = type('Request', (), {'method': 'GET', 'user': None})()  # Анонимный запрос
+
+    # 1. Проверка SAFE_METHODS
+    assert permission.has_object_permission(request, None, ad)
+
+    # 2. Проверка для администратора
+    request.method = 'DELETE'
+    request.user = admin_user  # Администратор
+    assert permission.has_object_permission(request, None, ad)
+
+    # 3. Проверка для владельца
+    request.user = user  # Владелец
+    assert permission.has_object_permission(request, None, ad)
+
+    # 4. Проверка для другого пользователя
+    request.user = another_user  # Не владелец и не админ
+    assert not permission.has_object_permission(request, None, ad)
