@@ -1,153 +1,146 @@
 # Ads Board (Доска объявлений)
 
-Проект Ads Board — это веб-приложение для размещения и управления объявлениями, реализованное на базе Django и Django REST Framework (DRF).
+Проект **Ads Board** — это веб-приложение для размещения и управления объявлениями, реализованное на базе **Django** и **Django REST Framework (DRF)**.
 
 ---
 
-## Ключевые особенности проекта
+## 🔑 Ключевые особенности
 
-- Используется фреймворк Django и библиотека DRF для создания RESTful API.
-- Хранение данных реализовано с помощью СУБД PostgreSQL через библиотеку psycopg2, без прямого SQL-кода.
-- Авторизация и аутентификация через JSON Web Token (JWT) с помощью djangorestframework-simplejwt.
-- Роли и права пользователей разграничены (администраторы и обычные пользователи).
-- Автоматическая генерация документации API с помощью drf-spectacular.
-- Полное покрытие кода тестами — более 75%.
-- Соблюдены рекомендации PEP8 с использованием flake8, black, isort.
-- Проект подготовлен для запуска в Docker и Docker Compose.
-- Хранение и загрузка изображений объявлений.
-- Работа с доверенными доменами и настройка ALLOWED_HOSTS для безопасности.
-- Удобная структура проекта с разделением по приложениям: users (пользователи), ads (объявления).
-- Использование сериализаторов DRF для обработки данных API.
-- Использование базовых классов DRF для контроллеров (ViewSet, APIView и т.д.).
-- Хранение конфигурации в .env файле с помощью python-dotenv.
+- Django + DRF: реализация RESTful API
+- Авторизация через JWT (djangorestframework-simplejwt)
+- PostgreSQL через psycopg2-binary (без прямого SQL)
+- Кастомная модель пользователя и разграничение прав (админ / пользователь)
+- drf-spectacular — автоматическая генерация OpenAPI схемы и документации
+- JWT-вход/обновление токена с аннотацией схемы
+- Покрытие тестами >75% (pytest, coverage)
+- Проверка стиля: flake8, black, isort
+- Загрузка и хранение изображений к объявлениям
+- Docker и Docker Compose для запуска
+- ALLOWED_HOSTS и .env-конфигурация для продакшн-окружения
 
 ---
 
-## Стек технологий
+## 🧰 Стек технологий
 
 - Python 3.13
 - Django 5.2
 - Django REST Framework 3.16
 - PostgreSQL
 - psycopg2-binary
-- djangorestframework-simplejwt
-- drf-spectacular (автогенерация документации)
-- pytest, pytest-django, coverage (тестирование)
-- Docker, Docker Compose
-- flake8, black, isort (линтинг и форматирование)
+- SimpleJWT (JWT авторизация)
+- drf-spectacular (документация)
+- Poetry (зависимости)
+- Docker + Docker Compose
+- pytest, pytest-django, coverage
+- flake8, black, isort
 
 ---
 
-## Установка и запуск проекта
+## 🚀 Установка и запуск
 
-### Клонирование репозитория
+### 1. Клонирование репозитория
 
 ```bash
 git clone <URL_ВАШЕГО_РЕПОЗИТОРИЯ>
 cd ads-board
-Настройка окружения
-Создайте файл .env в корне проекта с переменными окружения:
+```
 
-env
+### 2. Создание .env
 
+Создайте файл `.env` в корне проекта со следующим содержимым:
+
+```env
 SECRET_KEY=ваш_секретный_ключ
 DEBUG=True
-NAME=ads_board
-USER=ads_board_user
-PASSWORD=ads_board_password
+NAME=ваша база данных
+USER=пользователь
+PASSWORD=пароль
 HOST=localhost
 PORT=5432
-Установка зависимостей
-Используется Poetry для управления зависимостями:
+```
 
-bash
-Копировать
-Редактировать
+### 3. Установка зависимостей через Poetry
+
+```bash
 poetry install
-Запуск с Docker
-Соберите и запустите контейнеры с помощью Docker Compose:
+```
 
-bash
-Копировать
-Редактировать
+### 4. Запуск с Docker
+
+```bash
 docker-compose up --build
-Миграции базы данных
-В контейнере или локально выполните миграции:
+```
 
-bash
-Копировать
-Редактировать
+### 5. Миграции и суперпользователь
+
+```bash
 python manage.py migrate
-Создание суперпользователя
-bash
-Копировать
-Редактировать
 python manage.py createsuperuser
-Использование API
-Документация доступна по адресам:
+```
 
-Swagger UI: /api/docs/
+---
 
-Redoc: /api/redoc/
+## 📡 Использование API
 
-OpenAPI схема: /api/schema/
+- Swagger UI: [http://localhost:8000/api/docs/](http://localhost:8000/api/docs/)
+- Redoc: [http://localhost:8000/api/redoc/](http://localhost:8000/api/redoc/)
 
-Авторизация по JWT:
+### JWT Авторизация
 
-Получение токена: POST /api/token/login/ (email + password)
+- Вход: `POST /api/token/login/` (email + password)
+- Обновление токена: `POST /api/token/refresh/`
 
-Обновление токена: POST /api/token/refresh/
+### Основные эндпоинты:
 
-Основные эндпоинты:
+- `/api/ads/` — CRUD объявлений
+- `/api/auth/` — JWT авторизация
 
-/api/ads/ — работа с объявлениями (CRUD)
+---
 
-/api/auth/ — авторизация через сессию DRF (по необходимости)
+## 📁 Структура проекта
 
-Структура проекта
-bash
-Копировать
-Редактировать
+```bash
 ads-board/
 ├── ads/                  # Приложение объявлений
-│   ├── models.py         # Модель Ad
-│   ├── serializers.py    # Сериализаторы для Ad
-│   ├── urls.py           # Маршруты приложения ads
-│   └── ...
+│   ├── models.py
+│   ├── serializers.py
+│   └── urls.py
 ├── users/                # Приложение пользователей
-│   ├── models.py         # Кастомная модель User
-│   ├── serializers.py    # Сериализаторы пользователей
-│   ├── jwt_urls.py       # Маршруты JWT
-│   └── ...
-├── config/               # Основные настройки Django проекта
+│   ├── models.py
+│   ├── serializers.py
+│   ├── jwt_urls.py
+│   └── permissions.py
+├── config/               # Конфигурация проекта
 │   ├── settings.py
-│   ├── urls.py           # Основные маршруты проекта
-│   └── wsgi.py
+│   └── urls.py
 ├── Dockerfile
 ├── docker-compose.yml
-├── pyproject.toml        # Управление зависимостями через Poetry
-├── README.md             # Текущий файл
-└── .env                  # Переменные окружения (не в репозитории)
-Тестирование
-Для запуска тестов и проверки покрытия:
+├── pyproject.toml
+├── README.md
+└── .env
+```
 
-bash
-Копировать
-Редактировать
+---
+
+## 🧪 Тестирование
+
+```bash
 pytest --cov=.
-Покрытие тестами > 75%.
+```
 
-Безопасность и права доступа
-Настроены доверенные домены через ALLOWED_HOSTS (в settings.py).
+> Покрытие тестами >75%
 
-Авторизация и права разграничены, реализована кастомная модель пользователя с ролями.
+---
 
-Для API применяется JWT-аутентификация.
+## 🔒 Безопасность и права
 
-Ограничения доступа к объявлениям через кастомные permissions.
+- Ограничения по ролям и доступу к объектам
+- ALLOWED_HOSTS + .env
+- Кастомные permissions на объявления
+- JWT-аутентификация
 
-Лицензия
+---
+
+## 📜 Лицензия
+
 Проект открыт для использования и модификации.
-
-Копировать
-Редактировать
