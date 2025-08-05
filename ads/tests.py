@@ -37,12 +37,13 @@ def auth_client(user):
     client.force_authenticate(user=user)
     return client
 
+
 @pytest.fixture
 def admin_user():
     return User.objects.create_superuser(
-        email="admin@example.com",
-        password="adminpass"
+        email="admin@example.com", password="adminpass"
     )
+
 
 @pytest.mark.django_db
 def test_list_ads(auth_client, ad):
@@ -107,16 +108,19 @@ def test_ordering(auth_client):
 
 # Добавляем в существующий ads/tests.py
 
+
 @pytest.mark.django_db
-def test_is_owner_or_read_only_permission(api_client, auth_client, user, another_user, ad):
+def test_is_owner_or_read_only_permission(
+    api_client, auth_client, user, another_user, ad
+):
     permission = IsOwnerOrReadOnly()
-    request = type('Request', (), {'method': 'GET', 'user': None})()  # Анонимный запрос
+    request = type("Request", (), {"method": "GET", "user": None})()  # Анонимный запрос
 
     # 1. Проверка SAFE_METHODS (GET, HEAD, OPTIONS)
     assert permission.has_object_permission(request, None, ad)  # Должен разрешить
 
     # 2. Проверка изменения для автора
-    request.method = 'PUT'
+    request.method = "PUT"
     request.user = user  # Владелец объявления
     assert permission.has_object_permission(request, None, ad)
 
@@ -126,15 +130,17 @@ def test_is_owner_or_read_only_permission(api_client, auth_client, user, another
 
 
 @pytest.mark.django_db
-def test_is_admin_or_owner_or_read_only_permission(api_client, auth_client, user, another_user, admin_user, ad):
+def test_is_admin_or_owner_or_read_only_permission(
+    api_client, auth_client, user, another_user, admin_user, ad
+):
     permission = IsAdminOrOwnerOrReadOnly()
-    request = type('Request', (), {'method': 'GET', 'user': None})()  # Анонимный запрос
+    request = type("Request", (), {"method": "GET", "user": None})()  # Анонимный запрос
 
     # 1. Проверка SAFE_METHODS
     assert permission.has_object_permission(request, None, ad)
 
     # 2. Проверка для администратора
-    request.method = 'DELETE'
+    request.method = "DELETE"
     request.user = admin_user  # Администратор
     assert permission.has_object_permission(request, None, ad)
 

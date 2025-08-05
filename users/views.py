@@ -25,6 +25,8 @@ class RegisterView(generics.CreateAPIView):
 
 @method_decorator(csrf_exempt, name="dispatch")
 class PasswordResetView(APIView):
+    serializer_class = PasswordResetSerializer
+
     def post(self, request):
         serializer = PasswordResetSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -49,6 +51,8 @@ class PasswordResetView(APIView):
 
 @method_decorator(csrf_exempt, name="dispatch")
 class PasswordResetConfirmView(APIView):
+    serializer_class = PasswordResetSerializer
+
     def post(self, request):
         serializer = PasswordResetConfirmSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

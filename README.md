@@ -52,11 +52,11 @@ cd ads-board
 ```env
 SECRET_KEY=ваш_секретный_ключ
 DEBUG=True
-NAME=ваша база данных
-USER=пользователь
-PASSWORD=пароль
-HOST=localhost
-PORT=5432
+DB_NAME=ads_board
+DB_USER=ads_board_user
+DB_PASSWORD=ads_board_password
+DB_HOST=db
+DB_PORT=5432
 ```
 
 ### 3. Установка зависимостей через Poetry
@@ -68,7 +68,9 @@ poetry install
 ### 4. Запуск с Docker
 
 ```bash
-docker-compose up --build
+docker-compose down --volumes --remove-orphans
+docker-compose build --no-cache
+docker-compose up
 ```
 
 ### 5. Миграции и суперпользователь
@@ -82,12 +84,13 @@ python manage.py createsuperuser
 
 ## 📡 Использование API
 
+- OpenAPI schema: [/api/schema/](http://localhost:8000/api/schema/)
 - Swagger UI: [http://localhost:8000/api/docs/](http://localhost:8000/api/docs/)
 - Redoc: [http://localhost:8000/api/redoc/](http://localhost:8000/api/redoc/)
 
 ### JWT Авторизация
 
-- Вход: `POST /api/token/login/` (email + password)
+- Вход: `Вход: POST /api/token/login/` (email + password) (получение access и refresh токенов)
 - Обновление токена: `POST /api/token/refresh/`
 
 ### Основные эндпоинты:
@@ -119,7 +122,17 @@ ads-board/
 ├── README.md
 └── .env
 ```
+## 💻 Локальный запуск без Docker
 
+```bash
+# Активация виртуального окружения (если используется venv)
+source .venv/bin/activate
+
+# Установка зависимостей
+poetry install
+
+# Запуск сервера
+python manage.py runserver
 ---
 
 ## 🧪 Тестирование
@@ -128,7 +141,7 @@ ads-board/
 pytest --cov=.
 ```
 
-> Покрытие тестами >75%
+> Покрытие тестами >90%
 
 ---
 
