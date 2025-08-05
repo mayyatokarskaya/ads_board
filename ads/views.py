@@ -1,5 +1,6 @@
 from django.views.generic import TemplateView
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 from ads.models import Ad
 from ads.permissions import IsAdminOrOwnerOrReadOnly
@@ -19,7 +20,7 @@ class AdPagination(PageNumberPagination):
 class AdViewSet(viewsets.ModelViewSet):
     queryset = Ad.objects.all()
     serializer_class = AdSerializer
-    permission_classes = [IsAdminOrOwnerOrReadOnly]
+    permission_classes = [IsAuthenticated, IsAdminOrOwnerOrReadOnly]
     filter_backends = [filters.SearchFilter]
     search_fields = ["title"]
     pagination_class = AdPagination
@@ -40,7 +41,7 @@ class AdListView(TemplateView):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAdminOrOwnerOrReadOnly]
+    permission_classes = [IsAuthenticated, IsAdminOrOwnerOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
