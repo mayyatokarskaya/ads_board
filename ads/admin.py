@@ -10,6 +10,7 @@ class AdAdmin(admin.ModelAdmin):
     list_filter = ("created_at", "price")
     ordering = ("-created_at",)
 
+
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ("content", "author", "ad", "created_at")
