@@ -5,7 +5,7 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# Установка зависимостей системы
+# Установка системных зависимостей
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
@@ -17,18 +17,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Установка Poetry
 RUN pip install --no-cache-dir poetry
 
-# Копируем только файлы зависимостей сначала
+# Копируем зависимости
 COPY pyproject.toml poetry.lock* ./
-
-# Установка зависимостей Python
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi --no-root
 
-# Копируем остальные файлы
+# Копируем весь проект
 COPY . .
 
-# Entrypoint
-COPY ./entrypoint.sh /entrypoint.sh
+# Копируем entrypoint отдельно и даём права
+COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 CMD ["/entrypoint.sh"]
